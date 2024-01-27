@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymleaf.org"
+      xmlns="http://www.w3.org/1999/html">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../static/css/bootstrap.css"th:href="@{/css/bootstrap.css}"/>
+        <link rel="stylesheet" href="../static/css/style.css"th:href="@{/css/style.css}"/>
+        <link rel="stylesheet" href="../static/css/buttons.dataTables.min.css"th:href="@{/css/buttons.dataTables.min.css}"/>
+        <link rel="stylesheet" href="../static/css/jquery.dataTables.min.css"th:href="@{/css/jquery.dataTables.min.css}"/>
+
+        <script src="../static/js/jquery-3.7.0.js" th:src="@{/js/jquery-3.7.0.js}"></script>
+        <script src="../static/js/bootstrap.js" th:src="@{/js/bootstrap.js}"></script>
+        <script src="../static/js/dataTables.buttons.min.js" th:src="@{/js/dataTables.buttons.min.js}"></script>
+        <script src="../static/js/jquery.dataTables.min.js" th:src="@{/js/jquery.dataTables.min.js}"></script>
+
+        <title>EC</title>
+
+    </head>
+    <body>
+        <!-- Data table-->
+        <script>
+            $(document).ready(function(){
+                $("#table_UE").DataTable({
+                });
+            })
+        </script>
+
+        <div class=" centrer">
+            <h3>La liste des EC de l'UE: <span th:text="${ue.code}"></span><span th:text="${ue.libelle}"></span>
+            </h3>
+            <div class="row" style="padding-bottom: 10px; padding-top: 10px">
+                <div>
+                    <button type="button" class="btn btn-success" data-toggle="modal"
+                            data-target="#form_Ajouter_EC">Ajouter EC</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Debut popup Ajouter un EC-->
+        <div class="modal fade" id="form_Ajouter_EC">
+            <div class="modal-dialog">
+                <div class="modal-content panel-success">
+                    <!-- modal HEADER-->
+                    <div class="modal-header panel-heading">
+                        <button type="button" class="close" data-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" style="text-align: center">Ajouter un EC</h4>
+                    </div>
+                    <!-- modal body-->
+                    <form th:action="@{ajouter_ec_ue}" method="post">
+                            <div class="modal-body">
+                            <div style="display: none">
+                                <input name="ue" th:value="${ue.id}"/>
+                            </div>
+                            <div class="form-group">
+                                <label for="code">Code :</label>
+                                <input type="text"  name="code" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="libelle">Libellé :</label>
+                                <input type="text" name="libelle" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="CM">CM :</label>
+                                <input type="text"  name="CM" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="TD">TD :</label>
+                                <input type="text"  name="TD" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="TP">TP :</label>
+                                <input type="text" name="TP" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                 <label for="TPE">TPE:</label>
+                                 <input type="text" name="TPE" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cumulcmtdtp">CM+TD/TP :</label>
+                                <input type="text" name="cumulcmtdtp" class="form-control" />
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="VHT">VHT:</label>
+                                <input type="text" name="VHT" class="form-control" />
+                            </div>
+
+
+                            <div class="form-group">
+                                <label for="coefficient">Coefficient :</label>
+                                <input type="text"  name="coefficient" class="form-control" />
+                            </div>
+                            </div>
+                            <!-- modal Footer-->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                <button type="submit" class="btn btn-primary">Ajouter</button>
+                            </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+
+        <div class="table-reponsive">
+            <table class="table table-bordered table-striped" id="table_UE">
+                <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Libelle</th>
+                    <th>CM</th>
+                    <th>TD</th>
+                    <th>TP</th>
+                    <th>CM+TD/TP</th>
+                    <th>TPE</th>
+                    <th>VHT</th>
+                    <th>Coefficient</th>
+                    <th>Operation</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="ec:${listDesEC}">
+                    <td th:text="${ec.code}"></td>
+                    <td th:text="${ec.libelle}"></td>
+                    <td th:text="${ec.CM}"></td>
+                    <td th:text="${ec.TD}"></td>
+                    <td th:text="${ec.TP}"></td>
+                    <td th:text="${ec.cumulcmtdtp}"></td>
+                    <td th:text="${ec.TPE}"></td>
+                    <td th:text="${ec.VHT}"></td>
+                    <td th:text="${ec.coefficient}"></td>
+                    <td>
+                        <button class="btn btn-info btn-sm" data-title="Edit" data-toggle="modal"
+                                th:attr="data-target='#form_Modifier_EC'+${ec.id}">Modifier</button>
+                        <button class="btn btn-danger btn-sm" data-title="Delete" data-toggle="modal"
+                                th:attr="data-target='#form_Supprimer_EC'+${ec.id}">Suprimer</button>
+                    </td>
+
+                    <!-- Debut popup modifier un EC-->
+                    <div data-dismiss="modal">
+                        <div class="modal fade" th:attr="id='form_Modifier_EC' +${ec.id}">
+                            <div class="modal-dialog" >
+                                <div class="modal-content panel-info" >
+                                    <!-- modal header-->
+                                    <div class="modal-header panel-heading">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title" style="text-align: center">Modifier EC</h4>
+                                    </div>
+                                    <!-- modal body-->
+                                    <form th:action="@{modifier_ec_ue}" method="post">
+                                        <div class="modal-body">
+                                            <div style="display: none">
+                                                <input name="ue" th:value="${ue.id}"/>
+                                            </div>
+                                            <div style="display: none">
+                                                <input name="id" th:value="${ec.id}"/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="code">Code :</label>
+                                                <input type="text"  name="code" class="form-control" th:value="${ec.code}" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="libelle">Libellé :</label>
+                                                <input type="text"  name="libelle" class="form-control" th:value="${ec.libelle}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="CM">CM :</label>
+                                                <input type="text" name="CM" class="form-control" th:value="${ec.CM}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TD">TD :</label>
+                                                <input type="text"  name="TD" class="form-control" th:value="${ec.TD}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TP">TP :</label>
+                                                <input type="text" name="TP" class="form-control" th:value="${ec.TP}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TPE">TPE :</label>
+                                                <input type="text" name="TPE" class="form-control" th:value="${ec.TPE}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cumulcmtdtp">CM+TD/TP:</label>
+                                                <input type="text"  name="cumulcmtdtp" class="form-control" th:value="${ec.cumulcmtdtp}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="VHT">VHT :</label>
+                                                <input type="text" name="CM" class="form-control" th:value="${ec.VHT}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="coefficient">Coefficient :</label>
+                                                <input type="text" name="coefficient" class="form-control" th:value="${ec.coefficient}" required />
+                                            </div>
+                                        </div>
+                                        <!-- modal body-->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                                            <button type="submit" class="btn btn-primary">Modifier</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Debut popup suprimer un EC-->
+                    <div data-dismiss="model"...>
+                        <div class="modal fade" th:attr="id='form_Supprimer_EC' +${ec.id}">
+                            <div class="modal-dialog" >
+                                <div class="modal-content panel-info" >
+                                    <!-- modal header-->
+                                    <div class="modal-header panel-heading">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="modal-title" style="text-align: center">Supprimer EC</h4>
+                                    </div>
+                                    <!-- modal body-->
+                                    <form th:action="@{supprimer_ec_ue}" method="post">
+                                        <div class="modal-body">
+                                            <div style="display: none">
+                                                <input name="ue" th:value="${ue.id}"/>
+                                            </div>
+                                            <div style="display: none">
+                                                <input name="id" th:value="${ec.id}"/>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="code">Code :</label>
+                                                <input type="text" id="code" name="code" class="form-control" th:value="${ec.code}" required/>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="libelle">Libellé :</label>
+                                                <input type="text" id="libelle" name="libelle" class="form-control" th:value="${ec.libelle}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="CM">CM :</label>
+                                                <input type="text" id="CM" name="CM" class="form-control" th:value="${ec.CM}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TD">TD :</label>
+                                                <input type="text" id="TD" name="TD" class="form-control" th:value="${ec.TD}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TP">TP :</label>
+                                                <input type="text" id="TP" name="TP" class="form-control" th:value="${ec.TP}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="TPE">TP :</label>
+                                                <input type="text" id="TPE" name="TP" class="form-control" th:value="${ec.TPE}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="cumulcmtdtp">CM+TD/TP:</label>
+                                                <input type="text" id="cumulcmtdtp" name="cumulcmtdtp" class="form-control" th:value="${ec.cumulcmtdtp}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="VHT">VHT :</label>
+                                                <input type="text" id="VHT" name="CM" class="form-control" th:value="${ec.VHT}" required />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="coefficient">Coefficient :</label>
+                                                <input type="text" id="coefficient" name="coefficient" class="form-control" th:value="${ec.coefficient}" required />
+                                            </div>
+                                        </div>
+                                        <!-- modal body-->
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                            <button type="submit" class="btn btn-primary">Supprimer</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
